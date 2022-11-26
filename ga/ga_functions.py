@@ -44,6 +44,7 @@ class GA:
                 if fitness[j] > fitness[best]:
                     best = j
 
-            newpopulation.append[best]
+            # inserting best individual from k random instances of population
+            newpopulation.append[population[best]]
         
         return newpopulation
