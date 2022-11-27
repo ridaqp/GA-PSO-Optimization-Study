@@ -32,8 +32,9 @@ class GA:
     """ MUTATION """
     def mutation(self, mr = 0.5):
 
-        # if len(population[0]) <= 1:
-        #     raise ValueError("No mutation can occur for individuals with 1 or less variables")
+        if len(self.population[0]) <= 1:
+            print("No mutation can occur for individuals with 1 or less variables")
+
         # iterating through the whole population
         for i in self.population:
             # iterating through each individual
@@ -67,7 +68,6 @@ class GA:
 
     """ TOURNAMENT SELECTION """
     def tournament_selection(self, values, k = 3):
-
         newPopulation = []
 
         for i in range(self.npop):
