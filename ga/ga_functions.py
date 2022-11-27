@@ -28,6 +28,9 @@ class GA:
             self.population.append(individual)
         #print("population:", self.population)
 
+        self.best_individual, self.best_value = self.population[0], self.function(self.population[0])
+
+
 
     """ MUTATION """
     def mutation(self, mr = 0.5):
@@ -94,7 +97,6 @@ class GA:
         # it contains the values returned by the objective function
 
         print("original population", self.population)
-        best_individual, best_value = self.population[0], self.function(self.population[0])
 
         for generation in range(self.generations):
 
@@ -108,11 +110,11 @@ class GA:
             value = min(values)
             individual = self.population[index]
             
-            if best_value > value:
-                best_value = value
-                best_individual = individual
+            if self.best_value > value:
+                self.best_value = value
+                self.best_individual = individual
 
-            print(f"New best individual is {best_individual}, with minima {best_value}")
+            print(f"New best individual is {self.best_individual}, with minima {self.best_value}")
 
             # running tournament selection
             self.tournament_selection(values, k)
@@ -124,10 +126,9 @@ class GA:
             self.mutation(mr)
             #print("population after mutation:", self.population)
         
-        print(f"Final best individual is {best_individual}, with minima {best_value}")
-        return best_individual, best_value
+        print(f"Final best individual is {self.best_individual}, with minima {self.best_value}")
         
 
-test = cec2005.F1(10)
-ga = GA(test, -100, 100, 10, 100, 10)
+test = cec2005.F1(2)
+ga = GA(test, -100, 100, 2, 100, 10)
 ga.run_ga()
