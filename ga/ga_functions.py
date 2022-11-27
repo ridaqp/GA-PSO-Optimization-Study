@@ -1,5 +1,4 @@
 import numpy as np
-import matplotlib.pyplot as plt
 import random
 
 # for testing
@@ -7,7 +6,7 @@ from optproblems import cec2005
 
 class GA:
 
-    def __init__(self, function, min_bound, max_bound, dims, pop, gen):
+    def __init__(self, function, min_bound, max_bound, dims, pop = 100, gen = 20):
         # objective function
         self.function = function
         self.min_bound = min_bound # min int value for function
@@ -17,7 +16,7 @@ class GA:
         # population number
         self.npop = pop
         # number of generations
-        self.gen = gen
+        self.generations = gen
 
         self.population = []
         
@@ -30,20 +29,46 @@ class GA:
         #print("population:", self.population)
 
 
+    """ MUTATION """
+    def mutation(self, mr = 0.5):
+
+        # if len(population[0]) <= 1:
+        #     raise ValueError("No mutation can occur for individuals with 1 or less variables")
+        # iterating through the whole population
+        for i in self.population:
+            # iterating through each individual
+            for j in range(len(i)):
+                # if random number is below the mutation rate, it falls under the probability
+                if mr > random.random():
+                    # shuffle in place, acts as mutation
+                    random.shuffle(i)
+
+
+
+    """ ONE-POINT CROSSOVER """
+    def crossover(self, cr = 0.7):
+        # by default, crossover is copy of previous gen parents
+        newPopulation = self.population.copy()
+
+        # forming parent pairs in population
+        for i in range(0, self.npop - 1, 2):
+            # checking probability of crossover
+            # if random number is below the crossover rate, it falls under the probability
+            if cr > random.random():
+                # finding crossover point within length of parent (dims)
+                cp = random.randint(0, self.dims - 1)
+                # performing crossover, creating 2 new children by merging variables from parents
+                # to or from crossover point
+                newPopulation[i] = self.population[i][:cp] + self.population[i+1][cp:]
+                newPopulation[i+1] = self.population[i+1][:cp] + self.population[i][cp:]
+
+        self.population = newPopulation
+    
 
     """ TOURNAMENT SELECTION """
-    def tournament_selection(self, population, k = 3):
-
-        # calculating function values of each member of population
-        # it contains the values returned by the objective function
-        values = [self.function(i) for i in population]
-
-        # saving best individual incase deleted by mistake
-        best_index = np.argmin(values)
-        best_individual = population[best_index]
+    def tournament_selection(self, values, k = 3):
 
         newPopulation = []
-        #print("values:", values)
 
         for i in range(self.npop):
             # extracting random indexes
@@ -56,59 +81,53 @@ class GA:
                     best = j
 
             # inserting best individual from k random instances of population
-            newPopulation.append(population[best])
+            newPopulation.append(self.population[best])
+
+        self.population = newPopulation
+
+
+
+    """ GENETIC ALGORITHM """
+    def run_ga(self, k = 3, cr = 0.7, mr = 0.5):
         
-        # we want to make sure we do not lose the lowest value incase 
-        if best_individual not in newPopulation:
-            print("true")
-            newPopulation[-1] = best_individual
-        #print("new fit pop:", newPopulation)
-        return newPopulation
+        # calculating function values of each member of population
+        # it contains the values returned by the objective function
 
+        print("original population", self.population)
+        best_individual, best_value = self.population[0], self.function(self.population[0])
 
+        for generation in range(self.generations):
 
-    """ MUTATION """
-    def mutation(self, population, mr):
+            print("Generation", generation)
 
-        # if len(population[0]) <= 1:
-        #     raise ValueError("No mutation can occur for individuals with 1 or less variables")
-        # iterating through the whole population
-        for i in population:
-            # iterating through each individual
-            for j in range(len(i)):
-                # if random number is below the mutation rate, it falls under the probability
-                if mr > random.random():
-                    # shuffle in place, acts as mutation
-                    random.shuffle(i)
+            # finding values from objective function
+            values = [self.function(i) for i in self.population]
 
-        #print("mutation pop:", population)
-        return population
+            # saving best individual
+            index = np.argmin(values)
+            value = min(values)
+            individual = self.population[index]
+            
+            if best_value > value:
+                best_value = value
+                best_individual = individual
 
+            print(f"New best individual is {best_individual}, with minima {best_value}")
 
+            # running tournament selection
+            self.tournament_selection(values, k)
+            #print("population after selection:", self.population)
+            # running crossover
+            self.crossover(cr)
+            #print("population after crossover:", self.population)
+            # running mutation
+            self.mutation(mr)
+            #print("population after mutation:", self.population)
+        
+        print(f"Final best individual is {best_individual}, with minima {best_value}")
+        return best_individual, best_value
+        
 
-    """ ONE-POINT CROSSOVER """
-    def crossover(self, population, cr):
-        # by default, crossover is copy of previous gen parents
-        newPopulation = population.copy()
-
-        # forming parent pairs in population
-        for i in range(0, self.npop, 2):
-            # checking probability of crossover
-            # if random number is below the crossover rate, it falls under the probability
-            if cr > random.random():
-                # finding crossover point within length of parent (dims)
-                cp = random.randint(0, self.dims - 1)
-                # performing crossover, creating 2 new children by merging variables from parents
-                # to or from crossover point
-                newPopulation[i] = population[i][:cp] + population[i+1][cp:]
-                newPopulation[i+1] = population[i+1][:cp] + population[i][cp:]
-
-        #print("new cross pop:", newPopulation)
-        return newPopulation
-    
-
-test = cec2005.F1(1)
-ga = GA(test, -100, 100, 1, 10, 10)
-ga.tournament_selection(ga.population, 3)
-ga.crossover(ga.population, 0.9)
-ga.mutation(ga.population, 0.5)
+test = cec2005.F1(10)
+ga = GA(test, -100, 100, 10, 100, 10)
+ga.run_ga()
