@@ -56,7 +56,9 @@ class particle():
         # get new personal cost
         current = self.get_fitness(self.position)
         # if new cost is lower than personal best
-        print("costs: current, personal, global", current, self.get_fitness(self.pbest), best)
+        print("cost: current, personal, global", current, self.get_fitness(self.pbest), best)
+        print("pos: current, personal, global", self.position, self.pbest, best_pos)
+
         if current < self.get_fitness(self.pbest):
             #set personal best as current position
             self.pbest = np.copy(self.position)

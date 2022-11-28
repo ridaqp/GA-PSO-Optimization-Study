@@ -29,6 +29,7 @@ class PSO():
         for i in range (self.iters):
             # evaluate each particle
             for particle in self.swarm:
+                print("new particle")
                 particle.updateVel(self.inertia, self.alpha, self.beta, self.gamma, self.vlbound, self.vubound, self.gbest_pos )
 
                 self.gbest_pos, self.gbest = particle.updatePos(self.lbound, self.ubound, self.gbest_pos, self.gbest)
@@ -37,7 +38,7 @@ class PSO():
 #Test: 
 benchmark = cec2005.F1(10)
 # create pso 
-swarm = PSO(benchmark, -100, 100, 0.4, 10, 10, 100)
+swarm = PSO(benchmark, -100, 100, 0.4, 10, 10, 35)
 best, value = swarm.evaluate_swarm()
 print(" the best search position is", best, "whose values is", value)
 
