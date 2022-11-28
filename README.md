@@ -7,6 +7,7 @@ info
 4. finding iingormants
 5. incorporating epsiolon
 6. decaying weights
+7. how do the acceleration coefficients and weights vary across particles and within dimensions?
 
 
 Links:

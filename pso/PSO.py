@@ -10,6 +10,17 @@ class PSO():
 
         self.swarm = [particle.particle(dims, size, lbound, ubound, step, objective, iters) for i in range(size)] 
 
+        # set upper limits on hyperparams:
+        self.inertia = w # weight for previous velocity
+        self.alpha = alpha  # acceleration coefficient for personal best
+        self.beta = beta  # acc. coeff. for informants best
+        self.gamma = gamma  # acc. coeff. for global best
+
+        # set bounds on dimensions for input
+        self.lbound, self.ubound = lbound, ubound
+        # set bounds on dimensions for velocity
+        self.vlbound, self.vuboundvMin = -0.2 * (ubound - lbound), 0.2*(ubound - lbound)
+
 
         # self.dimensions = dims  # dimensions of the search space
         # self.swarmsize = size #no. of particles in the swarm/population
@@ -38,8 +49,8 @@ class PSO():
         for i in range (self.iters):
             # evaluate each particle
             for particle in self.swarm:
-                particle.updateVel()
-                particle.updatePos()
+                particle.updateVel(self.inertia, self.alpha, self.beta, self.gamma, self.vlbound, self.vubound)
+                particle.updatePos(self.lbound, self.ubound)
 
 
     """Evaluate and update particles until convergence"""
