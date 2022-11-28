@@ -64,7 +64,7 @@ class PSO():
 #Test: 
 benchmark = cec2005.F1(10)
 # create pso 
-swarm = PSO(benchmark, -100, 100, 1, 10, 10, 10)
+swarm = PSO(benchmark, -100, 100, 1, 10, 2, 10)
 best, value = swarm.evaluate_swarm()
 print(" the best search position is", best, "whose values is", value)
 

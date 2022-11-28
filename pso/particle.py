@@ -39,23 +39,23 @@ class particle():
        
         #update position
         self.position += self.step * self.velocity 
-        pos = self.position
+        
 
         #check and fix bound violations
         for i in range (self.dims):
-            if pos[i] > ubound:
-                pos[i] = ubound
-            if pos[i]< lbound:
-                pos[i] = lbound
+            if self.position[i] > ubound:
+                self.position[i] = ubound
+            if self.position[i]< lbound:
+                self.position[i] = lbound
         
 
         # get new personal cost
-        current = self.get_fitness(pos)
+        current = self.get_fitness(self.position)
         # if new cost is lower than personal best
         print("costs: current, personal, global", current, self.get_fitness(self.pbest), best)
         if current < self.get_fitness(self.pbest):
             #set personal best as current position
-            self.pbest = pos
+            self.pbest = np.copy(self.position)
 
             #check informants best 
 
