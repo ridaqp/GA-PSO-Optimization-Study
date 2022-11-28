@@ -51,7 +51,7 @@ class particle():
         if current < self.get_fitness(self.pbest):
             self.pbest = self.position
 
-            #add informants best 
+            #check informants best 
 
             # check global best
             if current < self.get_fitness(bestpos):

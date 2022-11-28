@@ -52,7 +52,9 @@ class PSO():
             # evaluate each particle
             for particle in self.swarm:
                 particle.updateVel(self.inertia, self.alpha, self.beta, self.gamma, self.vlbound, self.vubound)
+
                 particle.updatePos(self.lbound, self.ubound)
+        return bestpos, self.swarm[0].get_fitness(bestpos)
 
 
     """Evaluate and update particles until convergence"""
