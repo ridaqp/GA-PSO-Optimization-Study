@@ -1,4 +1,9 @@
 import particle
+import numpy as np
+
+# default fitness function. 
+def sphere(inputs):
+    return np.sum(inputs ** 2)
 
 class PSO(): 
 
