@@ -44,9 +44,13 @@ class particle():
         #check and fix bound violations
         for i in range (self.dims):
             if self.position[i] > ubound:
+                print("here", self.position[i])
                 self.position[i] = ubound
+                print("then", self.position[i])
             if self.position[i]< lbound:
+                print("here", self.position[i])
                 self.position[i] = lbound
+                print("then", self.position[i])
         
 
         # get new personal cost
