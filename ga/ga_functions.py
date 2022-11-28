@@ -102,6 +102,9 @@ class GA:
 
             print("Generation", generation)
 
+            print("THE FITNESS VALUE")
+            print("the position", self.population[1])
+            print(self.function(self.population[1]))
             # finding values from objective function
             values = [self.function(i) for i in self.population]
 

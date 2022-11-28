@@ -1,17 +1,20 @@
 
+import random
+import numpy as np
+from optproblems import ce2005
+
+
 class particle(): 
-    def __init__(self, dims, size):
+    def __init__(self, dims, size, lbound,ubound, eps, objfunc, iters ):
 
-        self.swarmsize = size #no. of particles in the swarm/population
+        self.position = np.random.uniform(lbound, ubound, [size,dims])   # particle's position
+        self.velocity = np.random.uniform(-0.2(ubound - lbound), 0.2(ubound - lbound), [size,dims])   # particle's velocity
+        self.informants = [] # particle's neighbours
 
-        self.position = []   # current particle's position
-        self.velocity = []   # current particle's velocity
-        self.informants = [] # current particle's neighbours
-
-        # current best positions
-        self.infbest = self # the best position among neighbours
-        self.pbest = self   # the particle's best
-        self.gbest = self   # the swarm's best
+        # initialise best positions
+        self.infbest = self.position # the best position among neighbours/informants
+        self.pbest = self.position   # the particle's best
+        self.gbest = self.position   # the swarm's best
 
         # hyperparameters
         self.inertia = 0 # weight for previous velocity
@@ -19,12 +22,26 @@ class particle():
         self.beta = 0   # acc. coeff. for informants best
         self.gamma = 0  # acc. coeff. for global best
 
+        # get particle's current fitness
+        self.fitness = self.get_fitness()
+        self.objfunc = objfunc
+
+        #step size
+        self.step = eps
+
+    def get_fitness(self):
+        pass    
+
 
     def updatePos(self):
-        self.updateVal()
+        #self.updateVal()
+        self.position += self.step * self.velocity 
+
         pass
 
     def updateVel(self):
         pass
         
-        
+# default fitness function. 
+def sphere(inputs):
+    return np.sum(inputs ** 2)

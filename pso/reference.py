@@ -2,6 +2,7 @@ import math
 from typing import Callable, Iterable
 
 import numpy as np
+from optproblems import cec2005
 
 # Default simple fitness function that works for n dimensions
 # Has global minimum at origin point
@@ -212,6 +213,20 @@ class swarm:
             for i, p in enumerate(self.__swarm):
                 positions[i].append(p._particle__pos)
 
+        
         # Return the particle positions stacked (so index 0 tracks one
         # variable through the iterations)
         return [ np.stack(data, axis=1) for data in positions ]
+
+
+# Now Test:
+
+
+iterations = 500
+swarm = swarm(np.asarray([-100]), np.asarray([100]), fitness_func=_sphere, swarm_size=40)
+swarm.set_hyperparameters(beta=0.01, gamma=0.01)
+positions = swarm.track_search(iterations=iterations)
+print(positions)
+
+
+test = cec2005.F1(2)

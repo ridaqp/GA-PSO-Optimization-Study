@@ -1,40 +1,46 @@
 import particle
 import numpy as np
 
-# default fitness function. 
-def sphere(inputs):
-    return np.sum(inputs ** 2)
 
+
+self, dims, size, lbound,ubound, eps, objfunc = sphere
 class PSO(): 
 
-    def __init__(self, benchmark, dims, size, iters = 100):
+    def __init__(self, objective, lbound, ubound, step, dims = 10, size= 10, iters = 300,  w = 0.6, alpha = 2, beta = 2, gamma = 2 ):
 
-        dimensions = dims  # dimensions of the search space
-        swarmsize = size
-        swarm = self.setParticles()
+        self.swarm = [particle.particle(dims, size, lbound, ubound, step, objective, iters) for i in range(size)] 
 
-        # set upper limits on different hyperparameters
-        c1limit = 0 # for personal best
-        c2limit = 0 # for social best
-        c3limit = 0 # for global best
 
-        maxIters = iters
+        # self.dimensions = dims  # dimensions of the search space
+        # self.swarmsize = size #no. of particles in the swarm/population
 
-        gbest = []  # to keep track of the global best solutions in every iteration
-        fitnessfunc = benchmark
+        # self.swarm = self.setParticles()
+
+        # # set upper limits on different hyperparameters
+        # alp = 0 # for personal best
+        # c2limit = 0 # for social best
+        # c3limit = 0 # for global best
+
+        # maxIters = iters
+
+        # gbest = []  # to keep track of the global best solutions in every iteration
+        # fitnessfunc = benchmark
         
-        step = 0.1  # step size for position update
+        # step = 0.7  # step size for position update
 
     def setParticles(self):
         swarm = []
         for i in range (self.swarmsize):
+            particle.particle(self.dims, self.swarmsize, self.xMin, self.xMax, self.step)
             swarm.append(particle.particle(self.dimensions))
 
     def evaluate_swarm(self):
-        pass
+        for i in range (self.iters):
+            # evaluate each particle
+            for particle in self.swarm:
+                particle.updateVel()
+                particle.updatePos()
 
-    def update_swarm(self): 
-        pass 
 
     """Evaluate and update particles until convergence"""
     def optimise(self, benchmark):
