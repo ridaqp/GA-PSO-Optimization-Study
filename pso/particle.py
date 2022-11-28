@@ -19,8 +19,6 @@ class particle():
         self.beta = 0   # acc. coeff. for informants best
         self.gamma = 0  # acc. coeff. for global best
 
-    def evaluate(self):
-        pass
 
     def updatePos(self):
         self.updateVal()

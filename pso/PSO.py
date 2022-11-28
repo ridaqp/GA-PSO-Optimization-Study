@@ -2,21 +2,28 @@ import particle
 
 class PSO(): 
 
-    def __init__(self, benchmark):
+    def __init__(self, benchmark, dims, size, iters = 100):
 
-        dimensions = 0  # dimensions of the search space
-      
+        dimensions = dims  # dimensions of the search space
+        swarmsize = size
+        swarm = self.setParticles()
+
         # set upper limits on different hyperparameters
         c1limit = 0 # for personal best
         c2limit = 0 # for social best
         c3limit = 0 # for global best
 
-        maxIters = 0
-        
+        maxIters = iters
+
         gbest = []  # to keep track of the global best solutions in every iteration
         fitnessfunc = benchmark
-        swarm = []
+        
         step = 0.1  # step size for position update
+
+    def setParticles(self):
+        swarm = []
+        for i in range (self.swarmsize):
+            swarm.append(particle.particle(self.dimensions))
 
     def evaluate_swarm(self):
         pass
