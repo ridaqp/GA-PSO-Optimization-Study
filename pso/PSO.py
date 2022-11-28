@@ -5,6 +5,8 @@ import numpy as np
 
 self, dims, size, lbound,ubound, eps, objfunc = sphere
 class PSO(): 
+    global bestpos ; 
+    bestpos = np.zeros(dims)
 
     def __init__(self, objective, lbound, ubound, step, dims = 10, size= 10, iters = 300,  w = 0.6, alpha = 2, beta = 2, gamma = 2 ):
 

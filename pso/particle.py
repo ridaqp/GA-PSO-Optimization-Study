@@ -2,9 +2,10 @@
 import random
 import numpy as np
 from optproblems import ce2005
-
+from PSO import bestpos
 
 class particle(): 
+    
     def __init__(self, dims, size, lbound,ubound, eps, objfunc, iters ):
 
         self.position = np.random.uniform(lbound, ubound, [size,dims])   # particle's position
@@ -45,8 +46,18 @@ class particle():
                 pos[i] = lbound
         self.position = pos
 
-        # update best positions
-        
+        # update best costs
+        current = self.get_fitness(self.position)
+        if current < self.get_fitness(self.pbest):
+            self.pbest = self.position
+
+            #add informants best 
+
+            # check global best
+            if current < self.get_fitness(bestpos):
+                #update global best
+                bestpos = self.position
+
         
     
     """Update Velocity"""
