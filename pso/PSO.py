@@ -1,12 +1,10 @@
 import particle
 import numpy as np
+from optproblems import cec2005
 
 
-
-self, dims, size, lbound,ubound, eps, objfunc = sphere
 class PSO(): 
-    global bestpos ; 
-    bestpos = np.zeros(dims)
+    #global bestpos; 
 
     def __init__(self, objective, lbound, ubound, step, dims = 10, size= 10, iters = 300,  w = 0.6, alpha = 2, beta = 2, gamma = 2 ):
 
@@ -22,7 +20,6 @@ class PSO():
         self.lbound, self.ubound = lbound, ubound
         # set bounds on dimensions for velocity
         self.vlbound, self.vuboundvMin = -0.2 * (ubound - lbound), 0.2*(ubound - lbound)
-
 
         # self.dimensions = dims  # dimensions of the search space
         # self.swarmsize = size #no. of particles in the swarm/population
@@ -41,12 +38,6 @@ class PSO():
         
         # step = 0.7  # step size for position update
 
-    def setParticles(self):
-        swarm = []
-        for i in range (self.swarmsize):
-            particle.particle(self.dims, self.swarmsize, self.xMin, self.xMax, self.step)
-            swarm.append(particle.particle(self.dimensions))
-
     def evaluate_swarm(self):
         for i in range (self.iters):
             # evaluate each particle
@@ -57,15 +48,20 @@ class PSO():
         return bestpos, self.swarm[0].get_fitness(bestpos)
 
 
-    """Evaluate and update particles until convergence"""
-    def optimise(self, benchmark):
+    # """Evaluate and update particles until convergence"""
+    # def optimise(self, benchmark):
         
-        for i in range (self.maxIters):
-            self.evaluate_swarm()
-            self.update_swarm()
+    #     for i in range (self.maxIters):
+    #         self.evaluate_swarm()
+    #         self.update_swarm()
             
-            #if converged:
-                #break out of loop
+    #         #if converged:
+    #             #break out of loop
+
+#Test: 
+benchmark = cec2005.F1(10)
+# create pso 
+PSO(benchmark, -100, 100, 1, 10, 10, 300)
 
 
 

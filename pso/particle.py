@@ -1,15 +1,18 @@
 
 import random
 import numpy as np
-from optproblems import ce2005
-from PSO import bestpos
+from optproblems import cec2005
 
 class particle(): 
     
+    gbest:np.ndarray
+
     def __init__(self, dims, size, lbound,ubound, eps, objfunc, iters ):
 
-        self.position = np.random.uniform(lbound, ubound, [size,dims])   # particle's position
-        self.velocity = np.random.uniform(-0.2(ubound - lbound), 0.2(ubound - lbound), [size,dims])   # particle's velocity
+        self.position = np.random.uniform(lbound, ubound, [dims])   # particle's position
+        self.velocity = np.random.uniform(-0.2*(ubound - lbound), 0.2*(ubound - lbound), [dims])   # particle's velocity
+
+
         self.informants = [] # particle's neighbours
 
         # initialise best positions
@@ -17,10 +20,10 @@ class particle():
         self.pbest = self.position   # the particle's best
         self.gbest = self.position   # the swarm's best
 
-        
-        # get particle's current fitness
-        self.fitness = self.get_fitness()
         self.objfunc = objfunc
+        # get particle's current fitness
+        self.fitness = self.get_fitness(self.position)
+        
 
         #step size
         self.step = eps
@@ -28,11 +31,9 @@ class particle():
         # ?? necessary for velocity update
         self.dims = dims
 
-        
 
     def get_fitness(self, position):
-          return self.objfunc(position)
-
+        return self.objfunc(position)
 
     def updatePos(self, lbound, ubound):
 
