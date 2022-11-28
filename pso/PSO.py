@@ -19,8 +19,11 @@ class PSO():
         # set bounds on dimensions for input
         self.lbound, self.ubound = lbound, ubound
         # set bounds on dimensions for velocity
-        self.vlbound, self.vuboundvMin = -0.2 * (ubound - lbound), 0.2*(ubound - lbound)
+        self.vlbound, self.vubound = -0.2 * (ubound - lbound), 0.2*(ubound - lbound)
 
+        self.gbest = float('inf')
+        self.gbest_pos = np.zeros(dims)
+        self.iters = iters
         # self.dimensions = dims  # dimensions of the search space
         # self.swarmsize = size #no. of particles in the swarm/population
 
@@ -42,10 +45,10 @@ class PSO():
         for i in range (self.iters):
             # evaluate each particle
             for particle in self.swarm:
-                particle.updateVel(self.inertia, self.alpha, self.beta, self.gamma, self.vlbound, self.vubound)
+                particle.updateVel(self.inertia, self.alpha, self.beta, self.gamma, self.vlbound, self.vubound, self.gbest_pos )
 
-                particle.updatePos(self.lbound, self.ubound)
-        return bestpos, self.swarm[0].get_fitness(bestpos)
+                self.gbest_pos, self.gbest = particle.updatePos(self.lbound, self.ubound, self.gbest_pos, self.gbest)
+        return self.gbest_pos, self.gbest
 
 
     # """Evaluate and update particles until convergence"""
@@ -61,7 +64,9 @@ class PSO():
 #Test: 
 benchmark = cec2005.F1(10)
 # create pso 
-PSO(benchmark, -100, 100, 1, 10, 10, 300)
+swarm = PSO(benchmark, -100, 100, 1, 10, 10, 10)
+best, value = swarm.evaluate_swarm()
+print(" the best search position is", best, "whose values is", value)
 
 
 

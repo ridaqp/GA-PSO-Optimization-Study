@@ -16,9 +16,8 @@ class particle():
         self.informants = [] # particle's neighbours
 
         # initialise best positions
-        self.infbest = self.position # the best position among neighbours/informants
-        self.pbest = self.position   # the particle's best
-        self.gbest = self.position   # the swarm's best
+        self.infbest =  np.copy(self.position) # the best position among neighbours/informants
+        self.pbest =  np.copy(self.position)   # the particle's best
 
         self.objfunc = objfunc
         # get particle's current fitness
@@ -35,36 +34,43 @@ class particle():
     def get_fitness(self, position):
         return self.objfunc(position)
 
-    def updatePos(self, lbound, ubound):
-
+    def updatePos(self, lbound, ubound, best_pos, best):
+        
+       
         #update position
-        pos += self.step * self.velocity 
+        self.position += self.step * self.velocity 
+        pos = self.position
+
         #check and fix bound violations
         for i in range (self.dims):
             if pos[i] > ubound:
                 pos[i] = ubound
             if pos[i]< lbound:
                 pos[i] = lbound
-        self.position = pos
+        
 
-        # update best costs
-        current = self.get_fitness(self.position)
+        # get new personal cost
+        current = self.get_fitness(pos)
+        # if new cost is lower than personal best
+        print("costs: current, personal, global", current, self.get_fitness(self.pbest), best)
         if current < self.get_fitness(self.pbest):
-            self.pbest = self.position
+            #set personal best as current position
+            self.pbest = pos
 
             #check informants best 
 
-            # check global best
-            if current < self.get_fitness(bestpos):
+            # if new personal cost is less than the global best
+            if current < best:
                 #update global best
-                bestpos = self.position
-
+                best_pos = self.position
+                best = current
+        return best_pos, best
         
     
     """Update Velocity"""
-    def updateVel(self, inertia, alpha, beta, gamma, lbound, ubound):
+    def updateVel(self, inertia, alpha, beta, gamma, lbound, ubound, gbest):
         # add decaying weight here
-        velocity = inertia * self.velocity + alpha*np.random.rand(self.dims)*(self.pbest - self.position) + beta*np.random.rand(self.dims)*(self.gbest - self.position)+ gamma*np.random.rand(self.dims)*(self.infbest - self.position)
+        velocity = inertia * self.velocity + alpha*np.random.rand(self.dims)*(self.pbest - self.position) + beta*np.random.rand(self.dims)*(gbest - self.position) + 0 #+ gamma*np.random.rand(self.dims)*(self.infbest - self.position)
         # check if velocity out of bounds: 
         for i in range (self.dims):
             if velocity[i] > ubound:
