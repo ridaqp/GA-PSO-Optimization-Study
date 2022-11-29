@@ -4,12 +4,12 @@ import numpy as np
 class Particle():
     def __init__(self, dims, eps, lbound, ubound):
         #informants
-        self.position = np.random.uniform(-100, 100, [dims])
+        self.position = np.random.uniform(lbound, ubound, [dims])
         self.pBestPos = self.position
         self.pBest = float('inf') #this
         self.step = eps
         self.dims = dims
-        self.velocity = np.random.uniform(-0.2*(100 - (-100)), 0.2*(100 - (-100)), [dims])
+        self.velocity = np.random.uniform(-0.2*(ubound - lbound), 0.2*(ubound - lbound), [dims])
         self.lbound = lbound
         self.ubound = ubound
 
@@ -17,25 +17,19 @@ class Particle():
         self.position = self.position + self.step * self.velocity
         for i in range(self.dims):
             if self.position[i] > self.ubound:
-                print("here", self.position[i])
                 self.position[i] = self.ubound
-                print("then", self.position[i])
             if self.position[i]< self.lbound:
-                print("here", self.position[i])
                 self.position[i] = self.lbound
-                print("then", self.position[i])
 
     def updateVel(self, velocity):
         self.velocity = velocity
+        ubound = 0.2*(self.ubound - self.lbound)
+        lbound = -0.2*(self.ubound - self.lbound)
         for i in range(self.dims):
-            if self.position[i] > self.ubound:
-                print("here", self.position[i])
-                self.position[i] = self.ubound
-                print("then", self.position[i])
-            if self.position[i]< self.lbound:
-                print("here", self.position[i])
-                self.position[i] = self.lbound
-                print("then", self.position[i])
+            if self.velocity[i] > ubound:
+                self.velocity[i] = ubound
+            if self.velocity[i]< lbound:
+                self.velocity[i] = lbound
 
 # class particle(): 
     

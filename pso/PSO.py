@@ -26,16 +26,16 @@ class PSO():
     
     def update_pBests(self):
         for particle in self.population:
-            fitness_candidate = self.fitness(particle)
-            if(particle.pBest > fitness_candidate):
-                particle.pBest = fitness_candidate
+            current = self.fitness(particle)
+            if(particle.pBest > current):
+                particle.pBest = current
                 particle.pBestPos = particle.position
                 
     def update_gBest(self):
         for particle in self.population:
-            best_fitness_candidate = self.fitness(particle)
-            if(self.gBest_value > best_fitness_candidate):
-                self.gBest_value = best_fitness_candidate
+            current = self.fitness(particle)
+            if(self.gBest_value > current):
+                self.gBest_value = current
                 self.gBestPos = particle.position
 
     
@@ -57,22 +57,24 @@ class PSO():
                     current = self.fitness(next)   
 
             
-            #update velocity
-            #update position
+            #update velocity components
             
             cognitive = np.random.rand(self.dims) * (particle.pBestPos - particle.position)
             population = np.random.rand(self.dims) * (self.gBestPos - particle.position)
             social = np.random.rand(self.dims) * (infposition - particle.position)
             velocity = self.inertia * particle.velocity + self.alpha*cognitive + self.beta * population + self.gamma * social
             
+            #update velocity
             particle.updateVel(velocity)
+
+            #update position
             particle.updatePos()
             
     def optimize(self):
         itr = 0
         while(itr < self.iters):
-            self.set_pBest()
-            self.set_gBest()
+            self.update_pBests()
+            self.update_gBest()
 
             # results
             self.show_particles(itr)
