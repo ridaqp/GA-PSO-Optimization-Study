@@ -212,6 +212,7 @@ class swarm:
 
             for i, p in enumerate(self.__swarm):
                 positions[i].append(p._particle__pos)
+                print("P informants: ", p._particle)
 
         
         # Return the particle positions stacked (so index 0 tracks one

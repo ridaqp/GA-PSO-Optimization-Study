@@ -1,7 +1,5 @@
 
-import random
 import numpy as np
-from optproblems import cec2005
 
 class Particle():
     def __init__(self, dims, eps, iters):
@@ -14,8 +12,8 @@ class Particle():
         self.velocity = np.random.uniform(-0.2*(100 - (-100)), 0.2*(100 - (-100)), [dims])
 
     def update(self, ubound, lbound):
-        self.position = self.position + self.velocity
-        for i in range(2):
+        self.position = self.position + self.step * self.velocity
+        for i in range(self.dims):
             if self.position[i] > ubound:
                 print("here", self.position[i])
                 self.position[i] = ubound

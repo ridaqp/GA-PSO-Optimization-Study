@@ -5,11 +5,11 @@ from optproblems import cec2005
 
 
 class PSO():
-    def __init__(self, n_particles, dims=2, lbound = -100, ubound=100, eps= 0.5, iters=50, w=0.5, alpha=0.8, beta=0.9):
-        self.n_particles = n_particles
-        self.population = [particle.Particle(dims, eps, iters) for _ in range(self.n_particles)]
+    def __init__(self, size, dims=2, lbound = -100, ubound=100, eps= 0.5, iters=50, w=0.5, alpha=0.8, beta=0.9):
+        self.size = size
+        self.population = [particle.Particle(dims, eps, iters) for _ in range(size)]
         self.gBest_value = float('inf')
-        self.gBest_position = np.zeros(2)
+        self.gBest_position = np.zeros(dims)
         self.alpha = alpha
         self.beta = beta
         self.inertia = w
@@ -33,8 +33,10 @@ class PSO():
             if(self.gBest_value > best_fitness_candidate):
                 self.gBest_value = best_fitness_candidate
                 self.gBest_position = particle.position
+
+    
                 
-    def update_particles(self):
+    def evaluate(self):
         for particle in self.population:
             
             # get a set of informants
@@ -51,11 +53,10 @@ class PSO():
                     infposition = next.position
                     current = self.fitness(next)   
             
-            inertial = self.inertia * particle.velocity
             self_confidence = self.alpha * np.random.rand(self.dims) * (particle.pBest_position - particle.position)
             swarm_confidence = self.beta * np.random.rand(self.dims) * (self.gBest_position - particle.position)
             social_confidence = 0.3 * np.random.rand(self.dims) * (infposition - particle.position)
-            new_velocity = inertial + self_confidence + swarm_confidence +social_confidence
+            new_velocity = self.inertia * particle.velocity + self_confidence + swarm_confidence +social_confidence
             particle.velocity = new_velocity
             particle.update(self.ubound, self.lbound)
             
@@ -75,7 +76,7 @@ while(iteration < 50):
 
     # results
     search_space.show_particles(iteration)
-    search_space.update_particles()
+    search_space.evaluate()
     iteration += 1
     
 print("The best solution is: ", search_space.gBest_position, " in ", iteration, " iterations")
