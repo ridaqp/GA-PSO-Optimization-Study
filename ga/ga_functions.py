@@ -35,18 +35,19 @@ class GA:
     """ MUTATION """
     def mutation(self, mr = 0.5):
 
-        if len(self.population[0]) <= 1:
-            print("No mutation can occur for individuals with 1 or less variables")
-
         # iterating through the whole population
-        for i in self.population:
-            # iterating through each individual
-            for j in range(len(i)):
-                # if random number is below the mutation rate, it falls under the probability
-                if mr > random.random():
-                    # shuffle in place, acts as mutation
-                    random.shuffle(i)
-
+        for i in range(self.npop):
+            # if random number is below the mutation rate, it falls under the probability
+            if mr > random.random():
+                # adding random value of gaussian distribution to each element of individual
+                #print("before", self.population[i])
+                for x in range(self.dims):
+                    # mutating new gene
+                    new_gene = self.population[i][x] + np.random.normal()
+                    # only add new gene to population if it is within bounds
+                    if self.min_bound <= new_gene <= self.max_bound: 
+                        self.population[i][x] = new_gene
+                #print("after", self.population[i])
 
 
     """ ONE-POINT CROSSOVER """
@@ -91,7 +92,7 @@ class GA:
 
 
     """ GENETIC ALGORITHM """
-    def run_ga(self, k = 3, cr = 0.7, mr = 0.5):
+    def run_ga(self, k = 3, cr = 0.7, mr = 1):
         
         # calculating function values of each member of population
         # it contains the values returned by the objective function
@@ -129,6 +130,6 @@ class GA:
         print(f"Final best individual is {self.best_individual}, with minima {self.best_value}")
         
 
-test = cec2005.F1(2)
-ga = GA(test, -100, 100, 2, 100, 10)
+test = cec2005.F1(10)
+ga = GA(test, -100, 100, 10, 100, 100)
 ga.run_ga()
