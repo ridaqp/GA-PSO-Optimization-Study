@@ -71,7 +71,7 @@ class GA:
     
 
     """ TOURNAMENT SELECTION """
-    def tournament_selection(self, values, k = 3):
+    def tournament_selection(self, values, k):
         newPopulation = []
 
         for i in range(self.npop):
@@ -92,7 +92,7 @@ class GA:
 
 
     """ GENETIC ALGORITHM """
-    def run_ga(self, k = 3, cr = 0.7, mr = 0.5):
+    def run_ga(self, k = 5, cr = 0.7, mr = 0.4):
         
         # calculating function values of each member of population
         # it contains the values returned by the objective function
