@@ -24,11 +24,11 @@ class GA:
         for i in range(self.npop):
             # finding each individual of the population by selecting random number between min and max bound
             # of the objective function for dims number of times
+
+            """ the calulcation of an individual has been taken from the sample code cec2005_test.py provided by Prof. Hadj"""
             individual = [round(random.uniform(self.min_bound, self.max_bound),4) for _ in range(self.dims)]
             self.population.append(individual)
         #print("population:", self.population)
-
-        self.best_individual, self.best_value = self.population[0], self.function(self.population[0])
 
 
 
@@ -92,16 +92,13 @@ class GA:
 
 
     """ GENETIC ALGORITHM """
-    def run_ga(self, k = 3, cr = 0.7, mr = 1):
+    def run_ga(self, k = 3, cr = 0.7, mr = 0.5):
         
         # calculating function values of each member of population
         # it contains the values returned by the objective function
-
-        print("original population", self.population)
-
+        self.best_individual, self.best_value, self.best_gen = self.population[0], self.function(self.population[0]), 0
+        
         for generation in range(self.generations):
-
-            print("Generation", generation)
 
             # finding values from objective function
             values = [self.function(i) for i in self.population]
@@ -114,8 +111,7 @@ class GA:
             if self.best_value > value:
                 self.best_value = value
                 self.best_individual = individual
-
-            print(f"New best individual is {self.best_individual}, with minima {self.best_value}")
+                self.best_gen = generation
 
             # running tournament selection
             self.tournament_selection(values, k)
@@ -127,9 +123,4 @@ class GA:
             self.mutation(mr)
             #print("population after mutation:", self.population)
         
-        print(f"Final best individual is {self.best_individual}, with minima {self.best_value}")
-        
-
-test = cec2005.F1(10)
-ga = GA(test, -100, 100, 10, 100, 100)
-ga.run_ga()
+        return self.best_individual, self.best_value, self.best_gen
