@@ -5,35 +5,38 @@ import objectivefunctions
 
 
 class PSO():
-    def __init__(self, size, dims=2, lbound = -100, ubound=100, eps= 0.5, iters=50, w=0.5, alpha=0.8, beta=0.9, obj = objectivefunctions.Sphere):
+    def __init__(self, size, dims=2, lbound = -100, ubound=100, eps= 0.5, iters=50, w=0.5, alpha=0.8, beta=0.9, gamma = 0.3, obj = objectivefunctions.Sphere):
         self.size = size
-        self.population = [particle.Particle(dims, eps, iters) for _ in range(size)]
+        self.population = [particle.Particle(dims, eps, lbound, ubound) for _ in range(size)]
         self.gBest_value = float('inf')
-        self.gBest_position = np.zeros(dims)
+        self.gBestPos = np.zeros(dims)
         self.alpha = alpha
         self.beta = beta
+        self.gamma = gamma
         self.inertia = w
         self.ubound = ubound
         self.lbound = lbound
         self.obj = obj
         self.dims = dims
+        self.iters = iters
+
             
     def fitness(self, particle):
        return self.obj(particle.position)
     
-    def set_pBest(self):
+    def update_pBests(self):
         for particle in self.population:
             fitness_candidate = self.fitness(particle)
-            if(particle.pBest_value > fitness_candidate):
-                particle.pBest_value = fitness_candidate
-                particle.pBest_position = particle.position
+            if(particle.pBest > fitness_candidate):
+                particle.pBest = fitness_candidate
+                particle.pBestPos = particle.position
                 
-    def set_gBest(self):
+    def update_gBest(self):
         for particle in self.population:
             best_fitness_candidate = self.fitness(particle)
             if(self.gBest_value > best_fitness_candidate):
                 self.gBest_value = best_fitness_candidate
-                self.gBest_position = particle.position
+                self.gBestPos = particle.position
 
     
                 
@@ -42,7 +45,6 @@ class PSO():
             
             # get a set of informants
             informants = np.random.choice(self.population,6)
-            #do opposite and remove it from here
             if particle not in informants:
                 np.append(informants, particle)
 
@@ -53,34 +55,44 @@ class PSO():
                 if(self.fitness(next) < current):
                     infposition = next.position
                     current = self.fitness(next)   
+
             
-            self_confidence = self.alpha * np.random.rand(self.dims) * (particle.pBest_position - particle.position)
-            swarm_confidence = self.beta * np.random.rand(self.dims) * (self.gBest_position - particle.position)
-            social_confidence = 0.3 * np.random.rand(self.dims) * (infposition - particle.position)
-            new_velocity = self.inertia * particle.velocity + self_confidence + swarm_confidence +social_confidence
-            particle.velocity = new_velocity
-            particle.update(self.ubound, self.lbound)
+            #update velocity
+            #update position
             
+            cognitive = np.random.rand(self.dims) * (particle.pBestPos - particle.position)
+            population = np.random.rand(self.dims) * (self.gBestPos - particle.position)
+            social = np.random.rand(self.dims) * (infposition - particle.position)
+            velocity = self.inertia * particle.velocity + self.alpha*cognitive + self.beta * population + self.gamma * social
+            
+            particle.updateVel(velocity)
+            particle.updatePos()
+            
+    def optimize(self):
+        itr = 0
+        while(itr < self.iters):
+            self.set_pBest()
+            self.set_gBest()
+
+            # results
+            self.show_particles(itr)
+            self.evaluate()
+            itr += 1
+
+        print("The best solution is: ", self.gBestPos, " in ", itr, " iterations")
+
+
     def show_particles(self, iteration):        
         print(iteration, 'iterations')
-        print('BestPosition in this time:', self.gBest_position)
+        print('BestPosition in this time:', self.gBestPos)
         print('BestValue in this time:', self.gBest_value)
 
 
 #Tests: 
-search_space = PSO(100)
+PSO(100).optimize()
 
-iteration = 0
-while(iteration < 50):
-    search_space.set_pBest()
-    search_space.set_gBest()
 
-    # results
-    search_space.show_particles(iteration)
-    search_space.evaluate()
-    iteration += 1
-    
-print("The best solution is: ", search_space.gBest_position, " in ", iteration, " iterations")
+
         
 
 

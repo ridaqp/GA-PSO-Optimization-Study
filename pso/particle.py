@@ -2,25 +2,39 @@
 import numpy as np
 
 class Particle():
-    def __init__(self, dims, eps, iters):
+    def __init__(self, dims, eps, lbound, ubound):
         #informants
         self.position = np.random.uniform(-100, 100, [dims])
-        self.pBest_position = self.position
-        self.pBest_value = float('inf') #this
+        self.pBestPos = self.position
+        self.pBest = float('inf') #this
         self.step = eps
         self.dims = dims
         self.velocity = np.random.uniform(-0.2*(100 - (-100)), 0.2*(100 - (-100)), [dims])
+        self.lbound = lbound
+        self.ubound = ubound
 
-    def update(self, ubound, lbound):
+    def updatePos(self):
         self.position = self.position + self.step * self.velocity
         for i in range(self.dims):
-            if self.position[i] > ubound:
+            if self.position[i] > self.ubound:
                 print("here", self.position[i])
-                self.position[i] = ubound
+                self.position[i] = self.ubound
                 print("then", self.position[i])
-            if self.position[i]< lbound:
+            if self.position[i]< self.lbound:
                 print("here", self.position[i])
-                self.position[i] = lbound
+                self.position[i] = self.lbound
+                print("then", self.position[i])
+
+    def updateVel(self, velocity):
+        self.velocity = velocity
+        for i in range(self.dims):
+            if self.position[i] > self.ubound:
+                print("here", self.position[i])
+                self.position[i] = self.ubound
+                print("then", self.position[i])
+            if self.position[i]< self.lbound:
+                print("here", self.position[i])
+                self.position[i] = self.lbound
                 print("then", self.position[i])
 
 # class particle(): 
