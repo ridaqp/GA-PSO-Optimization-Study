@@ -1,6 +1,5 @@
 import particle
 import numpy as np
-from optproblems import cec2005
 import objectivefunctions
 
 
@@ -21,19 +20,18 @@ class PSO():
         self.iters = iters
 
             
-    def fitness(self, particle):
+    def get_fit(self, particle):
        return self.obj(particle.position)
     
     def update_pBests(self):
         for particle in self.population:
-            current = self.fitness(particle)
+            current = self.get_fit(particle)
             if(particle.pBest > current):
-                particle.pBest = current
                 particle.pBestPos = particle.position
                 
     def update_gBest(self):
         for particle in self.population:
-            current = self.fitness(particle)
+            current = self.get_fit(particle)
             if(self.gBest_value > current):
                 self.gBest_value = current
                 self.gBestPos = particle.position
@@ -52,9 +50,9 @@ class PSO():
             for i in range (len(informants)):
                 next = informants[i]
                 #compare fitness of current article against all informants
-                if(self.fitness(next) < current):
+                if(self.get_fit(next) < current):
                     infposition = next.position
-                    current = self.fitness(next)   
+                    current = self.get_fit(next)   
 
             
             #update velocity components
@@ -71,17 +69,17 @@ class PSO():
             particle.updatePos()
             
     def optimize(self):
-        itr = 0
-        while(itr < self.iters):
+        
+        for i in range(self.iters):
             self.update_pBests()
             self.update_gBest()
 
             # results
-            self.show_particles(itr)
+            self.show_particles(i)
             self.evaluate()
-            itr += 1
+           
 
-        print("The best solution is: ", self.gBestPos, " in ", itr, " iterations")
+        print("The best solution found is: ", self.gBestPos)
 
 
     def show_particles(self, iteration):        
