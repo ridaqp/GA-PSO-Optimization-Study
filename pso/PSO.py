@@ -1,15 +1,16 @@
 import particle
 import numpy as np
 from optproblems import cec2005
+import matplotlib as plt
 #objectivefunctions.Sphere
 
 class PSO():
-    def __init__(self, size, dims=10, lbound = -100, ubound=100, eps= 0.5, iters=50, w=0.5, alpha=0.8, beta=0.9, gamma = 0.3, obj = cec2005.F20):
+    def __init__(self, size=10, dims=10, lbound = -100, ubound=100, eps= 0.5, iters=50, w=0.5, alpha=0.8, beta=0.9, gamma = 0.3, obj = cec2005.F1):
         # number of particles in the population
         self.size = size
         #initialise swarm
         self.population = [particle.Particle(dims, eps, lbound, ubound) for _ in range(size)]
-        
+        self.bestCosts = [] # best global cost in each iteration
         self.gBest = float('inf') # the best global positions value
         self.gBestPos = np.zeros(dims) # the best global position vector
         self.alpha = alpha # acceleration coefficient for personal best
@@ -24,7 +25,6 @@ class PSO():
 
     """Function to get the fitness value of a particle"""     
     def get_fit(self, particle):
-       print(particle.position)
        return self.obj(particle.position)
     
     """Function to update the personal best position of particles in the population"""
@@ -86,26 +86,25 @@ class PSO():
             #find the global best position in the swarm
             self.update_gBest()
 
-            # results
-            self.show_particles(i)
             self.evaluate()
-           
+            self.bestCosts.append(self.gBest)
         print("The best global position is: ", self.gBestPos, " with value ", self.gBest)
 
+    def Plot(self):
+        plt.semilogy(self.bestCosts)
+        plt.ylim([10e-120, 10e20])
+        plt.xlim([0,3000])
+        plt.ylabel("Best Function Value")
+        plt.xlabel("Number of Iterations")
 
 
-    # def show_particles(self, iteration):        
-    #     print(iteration, 'iterations')
-    #     print('BestPosition in this time:', self.gBestPos)
-    #     print('BestValue in this time:', self.gBest)
 
 
 #Tests: 
 #PSO(100).optimize()
 #PSO(10, 10, iters= 1000).optimize()
-#PSO(50, 2, -100, 100, 1, 50, 0.5, 0.8, 0.9,0).optimize()
-#PSO(50, 2, -32, 32, 1, 100, 0.5, 0.8, 0.9,0).optimize()
-PSO(50, 2, -5, 5, 1, 1000, 0.5, 0.8, 0.9,0).optimize() #410. 0 
+PSO(50, 2, -100, 100, 1, 50, 0.5, 0.8, 0.9,0).optimize()
+#PSO(50, 10, -100, 100, 1, 100, 0.5, 0.8, 0.9,0).optimize()
 
 
 
@@ -121,48 +120,6 @@ PSO(50, 2, -5, 5, 1, 1000, 0.5, 0.8, 0.9,0).optimize() #410. 0
 
 
 
-
-
-
-
-
-# class PSO(): 
-#     #global bestpos; 
-
-#     def __init__(self, objective, lbound, ubound, step, dims = 10, size= 10, iters = 300,  w = 0.6, alpha = 0.8, beta = 0.9, gamma = 2 ):
-
-#         self.swarm = [particle.particle(dims, size, lbound, ubound, step, objective, iters) for i in range(size)] 
-
-#         # set upper limits on hyperparams:
-#         self.inertia = w # weight for previous velocity
-#         self.alpha = alpha  # acceleration coefficient for personal best
-#         self.beta = beta  # acc. coeff. for informants best
-#         self.gamma = gamma  # acc. coeff. for global best
-
-#         # set bounds on dimensions for input
-#         self.lbound, self.ubound = lbound, ubound
-#         # set bounds on dimensions for velocity
-#         self.vlbound, self.vubound = -0.2 * (ubound - lbound), 0.2*(ubound - lbound)
-
-#         self.gbest = float('inf')
-#         self.gbest_pos = np.zeros(dims)
-#         self.iters = iters
-
-#     def evaluate_swarm(self):
-#         for i in range (self.iters):
-#             # evaluate each particle
-#             for particle in self.swarm:
-#                 particle.updateVel(self.inertia, self.alpha, self.beta, self.gamma, self.vlbound, self.vubound, self.gbest_pos )
-
-#                 self.gbest_pos, self.gbest = particle.updatePos(self.lbound, self.ubound, self.gbest_pos, self.gbest)
-#         return self.gbest_pos, self.gbest
-
-# #Test: 
-# benchmark = cec2005.F1(10)
-# # create pso 
-# swarm = PSO(benchmark, -100, 100, 0.5, 10, 30, 50)
-# best, value = swarm.evaluate_swarm()
-# print(" the best search position is", best, "whose values is", value)
 
 
 
