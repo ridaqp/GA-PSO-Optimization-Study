@@ -100,6 +100,7 @@ class GA:
         
         for generation in range(self.generations):
 
+
             # finding values from objective function
             values = [self.function(i) for i in self.population]
 
