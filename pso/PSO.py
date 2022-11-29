@@ -1,16 +1,14 @@
-import particle
+from . import particle
 import numpy as np
 from optproblems import cec2005
-import matplotlib as plt
-#objectivefunctions.Sphere
+
 
 class PSO():
-    def __init__(self, size=10, dims=10, lbound = -100, ubound=100, eps= 0.5, iters=50, w=0.5, alpha=0.8, beta=0.9, gamma = 0.3, obj = cec2005.F1):
+    def __init__(self, size=50, dims=10, lbound = -100, ubound=100, eps= 0.9, iters=150, w=0.7, alpha=0.5, beta=1.5, gamma = 1.5, obj = cec2005.F1):
         # number of particles in the population
         self.size = size
         #initialise swarm
         self.population = [particle.Particle(dims, eps, lbound, ubound) for _ in range(size)]
-        self.bestCosts = [] # best global cost in each iteration
         self.gBest = float('inf') # the best global positions value
         self.gBestPos = np.zeros(dims) # the best global position vector
         self.alpha = alpha # acceleration coefficient for personal best
@@ -22,6 +20,7 @@ class PSO():
         self.obj = obj(dims) # the objective/fitness function
         self.dims = dims # dimensions in the search space 
         self.iters = iters #number of iterations to run PSO
+        self.bestiter = 0
 
     """Function to get the fitness value of a particle"""     
     def get_fit(self, particle):
@@ -35,12 +34,13 @@ class PSO():
                 particle.pBestPos = particle.position
 
     """Function to update the global best position of particles in the population"""           
-    def update_gBest(self):
+    def update_gBest(self,i):
         for particle in self.population:
             current = self.get_fit(particle)
             if(self.gBest > current):
                 self.gBest = current
                 self.gBestPos = particle.position
+                self.bestiter = i
 
     
     """Function to evaluate the swarm - finds the best social position + updates the velocity and position of each particle"""           
@@ -84,27 +84,19 @@ class PSO():
             # find the personal best of all the particles in the swarm
             self.update_pBests()
             #find the global best position in the swarm
-            self.update_gBest()
+            self.update_gBest(i)
 
             self.evaluate()
-            self.bestCosts.append(self.gBest)
-        print("The best global position is: ", self.gBestPos, " with value ", self.gBest)
-
-    def Plot(self):
-        plt.semilogy(self.bestCosts)
-        plt.ylim([10e-120, 10e20])
-        plt.xlim([0,3000])
-        plt.ylabel("Best Function Value")
-        plt.xlabel("Number of Iterations")
+           
 
 
-
+#PSO(lbound = -100, ubound = 100, size = 50, iters =100).optimize()
 
 #Tests: 
 #PSO(100).optimize()
 #PSO(10, 10, iters= 1000).optimize()
-PSO(50, 2, -100, 100, 1, 50, 0.5, 0.8, 0.9,0).optimize()
-#PSO(50, 10, -100, 100, 1, 100, 0.5, 0.8, 0.9,0).optimize()
+#PSO(50, 2, -100, 100, 1, 50, 0.5, 0.8, 0.9,0).optimize()
+#PSO(50, 10, -100, 100, 1, 100, 0.5, 1.5, 0.9,0).optimize()
 
 
 
