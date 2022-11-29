@@ -33,7 +33,7 @@ class GA:
 
 
     """ MUTATION """
-    def mutation(self):
+    def mutation(self, mr):
 
         # iterating through the whole population
         for i in range(self.npop):
@@ -51,7 +51,7 @@ class GA:
 
 
     """ ONE-POINT CROSSOVER """
-    def crossover(self):
+    def crossover(self, cr):
         # by default, crossover is copy of previous gen parents
         newPopulation = self.population.copy()
 
