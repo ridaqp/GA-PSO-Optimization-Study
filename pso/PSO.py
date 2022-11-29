@@ -1,10 +1,10 @@
-from . import particle
+import particle
 import numpy as np
 from optproblems import cec2005
 
 
 class PSO():
-    def __init__(self, size=50, dims=10, lbound = -100, ubound=100, eps= 0.9, iters=150, w=0.7, alpha=0.5, beta=1.5, gamma = 1.5, obj = cec2005.F1):
+    def __init__(self, size=50, dims=10, lbound = -100, ubound=100, eps= 0.9, iters=150, w=0.7, alpha=0.5, beta=0.5, gamma = 0.1, obj = cec2005.F1):
         # number of particles in the population
         self.size = size
         #initialise swarm
@@ -85,9 +85,10 @@ class PSO():
             self.update_pBests()
             #find the global best position in the swarm
             self.update_gBest(i)
-
+            
             self.evaluate()
-           
+            #print(self.gBest)
+            
 
 
 #PSO(lbound = -100, ubound = 100, size = 50, iters =100).optimize()
@@ -96,8 +97,8 @@ class PSO():
 #PSO(100).optimize()
 #PSO(10, 10, iters= 1000).optimize()
 #PSO(50, 2, -100, 100, 1, 50, 0.5, 0.8, 0.9,0).optimize()
-#PSO(50, 10, -100, 100, 1, 100, 0.5, 1.5, 0.9,0).optimize()
-
+#PSO(50, 10, -100, 100, 1, 200, 0.5, 0.5, 0.9,0).optimize()
+#PSO(lbound = -100, ubound = 100, size = 100, iters =300).optimize()
 
 
 
