@@ -6,7 +6,7 @@ from optproblems import cec2005
 
 class GA:
 
-    def __init__(self, function, min_bound, max_bound, dims, pop = 100, gen = 20):
+    def __init__(self, function, min_bound, max_bound, dims, pop = 100, gen = 100):
         # objective function
         self.function = function
         self.min_bound = min_bound # min int value for function
@@ -92,7 +92,7 @@ class GA:
 
 
     """ GENETIC ALGORITHM """
-    def run_ga(self, k = 5, cr = 0.7, mr = 0.4):
+    def run_ga(self, k = 5, cr = 1, mr = 0.4):
         
         # calculating function values of each member of population
         # it contains the values returned by the objective function
