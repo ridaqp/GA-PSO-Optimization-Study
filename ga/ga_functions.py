@@ -92,7 +92,7 @@ class GA:
 
 
     """ GENETIC ALGORITHM """
-    def run_ga(self, k = 5, cr = 1, mr = 0.4):
+    def run_ga(self, k = 5, cr = 0.8, mr = 0.6):
         
         # calculating function values of each member of population
         # it contains the values returned by the objective function
