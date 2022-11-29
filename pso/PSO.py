@@ -6,7 +6,7 @@ from optproblems import cec2005
 class PSO(): 
     #global bestpos; 
 
-    def __init__(self, objective, lbound, ubound, step, dims = 10, size= 10, iters = 300,  w = 0.6, alpha = 2, beta = 2, gamma = 2 ):
+    def __init__(self, objective, lbound, ubound, step, dims = 10, size= 10, iters = 300,  w = 0.6, alpha = 0.8, beta = 0.9, gamma = 2 ):
 
         self.swarm = [particle.particle(dims, size, lbound, ubound, step, objective, iters) for i in range(size)] 
 
@@ -29,7 +29,6 @@ class PSO():
         for i in range (self.iters):
             # evaluate each particle
             for particle in self.swarm:
-                print("new particle")
                 particle.updateVel(self.inertia, self.alpha, self.beta, self.gamma, self.vlbound, self.vubound, self.gbest_pos )
 
                 self.gbest_pos, self.gbest = particle.updatePos(self.lbound, self.ubound, self.gbest_pos, self.gbest)
@@ -38,7 +37,7 @@ class PSO():
 #Test: 
 benchmark = cec2005.F1(10)
 # create pso 
-swarm = PSO(benchmark, -100, 100, 0.4, 10, 10, 35)
+swarm = PSO(benchmark, -100, 100, 0.5, 10, 30, 50)
 best, value = swarm.evaluate_swarm()
 print(" the best search position is", best, "whose values is", value)
 
