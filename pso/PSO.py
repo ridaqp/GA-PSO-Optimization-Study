@@ -1,11 +1,11 @@
 import particle
 import numpy as np
 from optproblems import cec2005
-
+import objectivefunctions
 
 
 class PSO():
-    def __init__(self, size, dims=2, lbound = -100, ubound=100, eps= 0.5, iters=50, w=0.5, alpha=0.8, beta=0.9):
+    def __init__(self, size, dims=2, lbound = -100, ubound=100, eps= 0.5, iters=50, w=0.5, alpha=0.8, beta=0.9, obj = objectivefunctions.Sphere):
         self.size = size
         self.population = [particle.Particle(dims, eps, iters) for _ in range(size)]
         self.gBest_value = float('inf')
@@ -15,10 +15,11 @@ class PSO():
         self.inertia = w
         self.ubound = ubound
         self.lbound = lbound
+        self.obj = obj
         self.dims = dims
             
     def fitness(self, particle):
-       return np.sum(np.square(particle.position))
+       return self.obj(particle.position)
     
     def set_pBest(self):
         for particle in self.population:
