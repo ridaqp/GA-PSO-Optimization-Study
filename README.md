@@ -3,6 +3,7 @@
 A comparative study of Genetic Algorithms (GA) and Particle Swarm Optimization (PSO) on CEC2005 benchmark functions to help understand how different evolutionary strategies behave across varying fitness landscapes.
 
 We implement GA and PSO from scratch and evaluate their performance on a suite of unimodal/multimodal and separable/non-separable optimization problems.
+
 ---
 
 ### Algorithms
